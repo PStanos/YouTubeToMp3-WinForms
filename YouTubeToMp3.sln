@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.31129.286
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "YouTubeToMp3", "YouTubeToMp3\YouTubeToMp3.csproj", "{BB8D7686-7316-4C1D-A011-3C0E16850D3C}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{BB8D7686-7316-4C1D-A011-3C0E16850D3C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BB8D7686-7316-4C1D-A011-3C0E16850D3C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BB8D7686-7316-4C1D-A011-3C0E16850D3C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BB8D7686-7316-4C1D-A011-3C0E16850D3C}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {A6E26CC7-C5A6-446D-B2BC-37F19ACD0B0B}
+	EndGlobalSection
+EndGlobal
