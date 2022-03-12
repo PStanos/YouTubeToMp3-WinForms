@@ -12,35 +12,41 @@ namespace YouTubeToMp3
          InitializeComponent();
       }
 
-      private void btnConvert_Click( object sender, EventArgs e )
+      private async void btnConvert_Click( object sender, EventArgs e )
       {
-         string startTimestamp = GetStartTimestamp();
-         string endTimestamp = GetEndTimestamp();
-         string fileNameNoExtension = string.IsNullOrWhiteSpace( txtFileName.Text ) ? Guid.NewGuid().ToString() : txtFileName.Text;
-         string fileName = $"{fileNameNoExtension}.mp3";
-         string destinationPath = Directory.Exists( txtDestinationDirectory.Text ) ? Path.Combine( txtDestinationDirectory.Text, fileName ) : fileName;
+         Enabled = false;
 
-         Process youtubeDlProcess;
-         ProcessStartInfo youtubeDlProcessInfo;
-         youtubeDlProcessInfo = new ProcessStartInfo( "youtube-dl.exe", $"-g {txtYouTubeUrl.Text}" );
-         youtubeDlProcessInfo.RedirectStandardOutput = true;
+         try
+         {
+            string startTimestamp = GetStartTimestamp();
+            string endTimestamp = GetEndTimestamp();
+            string fileNameNoExtension = string.IsNullOrWhiteSpace( txtFileName.Text ) ? Guid.NewGuid().ToString() : txtFileName.Text;
+            string fileName = $"{fileNameNoExtension}.mp3";
+            string destinationPath = Directory.Exists( txtDestinationDirectory.Text ) ? Path.Combine( txtDestinationDirectory.Text, fileName ) : fileName;
 
-         youtubeDlProcess = Process.Start( youtubeDlProcessInfo );
-         youtubeDlProcess.WaitForExit();
-         string youtubeDlOutput = youtubeDlProcess.StandardOutput.ReadToEnd();
+            Process youtubeDlProcess;
+            ProcessStartInfo youtubeDlProcessInfo;
+            youtubeDlProcessInfo = new ProcessStartInfo( "youtube-dl.exe", $"-g {txtYouTubeUrl.Text}" );
+            youtubeDlProcessInfo.RedirectStandardOutput = true;
+            youtubeDlProcessInfo.CreateNoWindow = true;
 
-         string audioStreamUrl = youtubeDlOutput.Split( '\n' )[1];
+            youtubeDlProcess = Process.Start( youtubeDlProcessInfo );
+            await youtubeDlProcess.WaitForExitAsync();
+            string youtubeDlOutput = youtubeDlProcess.StandardOutput.ReadToEnd();
 
-         Process ffmpegProcess;
-         ProcessStartInfo ffmpegProcessInfo;
-         ffmpegProcessInfo = new ProcessStartInfo( "ffmpeg.exe", $"-ss {startTimestamp} -to {endTimestamp} -i {audioStreamUrl} \"{destinationPath}\"" );
-         ffmpegProcessInfo.RedirectStandardOutput = true;
-         ffmpegProcessInfo.RedirectStandardError = true;
-         ffmpegProcess = Process.Start( ffmpegProcessInfo );
-         ffmpegProcess.WaitForExit();
-         // FFmpeg outputs to standard error for regular shit? Cool.
-         string ffmpegError = ffmpegProcess.StandardError.ReadToEnd();
+            string audioStreamUrl = youtubeDlOutput.Split( '\n' )[1];
 
+            Process ffmpegProcess;
+            ProcessStartInfo ffmpegProcessInfo;
+            ffmpegProcessInfo = new ProcessStartInfo( "ffmpeg.exe", $"-ss {startTimestamp} -to {endTimestamp} -i {audioStreamUrl} \"{destinationPath}\"" );
+            ffmpegProcessInfo.CreateNoWindow = true;
+            ffmpegProcess = Process.Start( ffmpegProcessInfo );
+            await ffmpegProcess.WaitForExitAsync();
+         }
+         finally
+         {
+            Enabled = true;
+         }
       }
 
       private string GetStartTimestamp()

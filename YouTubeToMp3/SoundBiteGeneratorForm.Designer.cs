@@ -62,7 +62,7 @@ namespace YouTubeToMp3
          // 
          this.txtYouTubeUrl.Location = new System.Drawing.Point(98, 15);
          this.txtYouTubeUrl.Name = "txtYouTubeUrl";
-         this.txtYouTubeUrl.Size = new System.Drawing.Size(188, 23);
+         this.txtYouTubeUrl.Size = new System.Drawing.Size(251, 23);
          this.txtYouTubeUrl.TabIndex = 0;
          // 
          // label1
