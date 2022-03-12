@@ -2,6 +2,7 @@
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
+using MP = MediaPlayer;
 
 namespace YouTubeToMp3
 {
@@ -49,12 +50,23 @@ namespace YouTubeToMp3
             bool outputDirExists = Directory.Exists( txtDestinationDirectory.Text );
             string destinationPath = outputDirExists ? Path.Combine( txtDestinationDirectory.Text, fileName ) : fileName;
 
+            if ( File.Exists( destinationPath ) )
+            {
+               MessageBox.Show( $"File already exists at {destinationPath}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error );
+               return;
+            }
+
             if ( !outputDirExists )
             {
                MessageBox.Show( "Output directory does not exist or was left empty. Using current working directory...", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning );
             }
 
             await _converter.ConvertAsync( youTubeUrl, startTimestamp, endTimestamp, destinationPath );
+
+            MP.MediaPlayer mediaPlayer = new MP.MediaPlayer();
+
+            mediaPlayer.Volume = -800;
+            mediaPlayer.Open( destinationPath );
          }
          finally
          {
