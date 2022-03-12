@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Linq;
 using System.Windows.Forms;
 
 namespace YouTubeToMp3
@@ -23,14 +24,35 @@ namespace YouTubeToMp3
          {
             if ( !Uri.TryCreate( txtYouTubeUrl.Text, UriKind.Absolute, out Uri youTubeUrl ) )
             {
+               MessageBox.Show( "Bad YouTube URL", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error );
                return;
             }
 
             VideoTimestamp startTimestamp = GetStartTimestamp();
             VideoTimestamp endTimestamp = GetEndTimestamp();
+
+            if ( !( startTimestamp < endTimestamp ) )
+            {
+               MessageBox.Show( "Start timestamp is after end timestamp", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error );
+               return;
+            }
+
             string fileNameNoExtension = string.IsNullOrWhiteSpace( txtFileName.Text ) ? Guid.NewGuid().ToString() : txtFileName.Text;
+
+            if ( string.IsNullOrWhiteSpace( fileNameNoExtension ) || fileNameNoExtension.ToCharArray().Any( c => Path.GetInvalidFileNameChars().Contains( c ) ) )
+            {
+               MessageBox.Show( "Invalid file name", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error );
+               return;
+            }
+
             string fileName = $"{fileNameNoExtension}.mp3";
-            string destinationPath = Directory.Exists( txtDestinationDirectory.Text ) ? Path.Combine( txtDestinationDirectory.Text, fileName ) : fileName;
+            bool outputDirExists = Directory.Exists( txtDestinationDirectory.Text );
+            string destinationPath = outputDirExists ? Path.Combine( txtDestinationDirectory.Text, fileName ) : fileName;
+
+            if ( !outputDirExists )
+            {
+               MessageBox.Show( "Output directory does not exist or was left empty. Using current working directory...", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning );
+            }
 
             await _converter.ConvertAsync( youTubeUrl, startTimestamp, endTimestamp, destinationPath );
          }

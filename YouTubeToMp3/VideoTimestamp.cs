@@ -28,5 +28,19 @@
       {
          return $"{Hours}:{Minutes}:{Seconds:F4}";
       }
+
+      public static bool operator >( VideoTimestamp left, VideoTimestamp right )
+      {
+         return left.Hours > right.Hours
+            || ( left.Hours == right.Hours && left.Minutes > right.Minutes )
+            || ( left.Hours == right.Hours && left.Minutes == right.Minutes && left.Seconds > right.Seconds);
+      }
+
+      public static bool operator <( VideoTimestamp left, VideoTimestamp right )
+      {
+         return left.Hours < right.Hours
+            || ( left.Hours == right.Hours && left.Minutes < right.Minutes )
+            || ( left.Hours == right.Hours && left.Minutes == right.Minutes && left.Seconds < right.Seconds );
+      }
    }
 }
